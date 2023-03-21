@@ -1,0 +1,11 @@
+{
+  "type": "techniq:test",
+  "ingredients": [
+    {
+      "item": "techniq:raw_amber"
+    }
+  ],
+  "output": {
+    "item": "techniq:amber"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "techniq:block/test_block"
+    },
+    "facing=south": {
+      "model": "techniq:block/test_block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "techniq:block/test_block",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "techniq:block/test_block",
+      "y": 90
+    }
+  }
+}

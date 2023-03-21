@@ -1,0 +1,9 @@
+{
+  "block.techniq.amber_block": "Amber Block",
+  "block.techniq.amber_ore": "Amber Ore",
+  "block.techniq.test_block": "Test Block",
+  "item.techniq.amber": "Amber",
+  "item.techniq.raw_amber": "Raw Amber",
+  "item.techniq.test_item": "Test Item",
+  "itemGroup.techniq.tab": "Techniq"
+}

@@ -1,0 +1,12 @@
+3126317dd057590ea80f5db1cb57efc3e6f13845 assets/techniq/lang/en_us.json
+48e7c5e8c79cb673931a1ca5b07b7efceb2484f1 assets/techniq/models/block/amber_block.json
+17911b48ac79f29f16a7731af50c741c766f3173 assets/techniq/models/block/amber_ore.json
+868ac3084b5322ce8262ee0ef6134966d8f5f243 assets/techniq/models/item/amber.json
+07ef08681f7dde8d289ca52ec0db580e7f361685 assets/techniq/models/item/amber_block.json
+2e12bdeb4c8afa82c7a2e106f37573f85948f781 assets/techniq/models/item/amber_ore.json
+7db1dd54df3dd3fd7f0994dcb72de6a5b7a0a8c3 assets/techniq/models/item/raw_amber.json
+64b3a1cc0bbff5d4f7c8ab1e9da1e9747ef5b31e assets/techniq/models/item/test_block.json
+dfebeb4960acddb31ae09171476745141b43bf0b assets/techniq/models/item/test_item.json
+a7ecfb88db8945aa610baa77c12f196810259b10 data/techniq/loot_tables/blocks/amber_block.json
+02d3e0af8f18f34b9c35daa10aeb21b23c556475 data/techniq/loot_tables/blocks/amber_ore.json
+c8818a892a2648cb7bff89e7805d2486ae963a41 data/techniq/loot_tables/blocks/test_block.json
