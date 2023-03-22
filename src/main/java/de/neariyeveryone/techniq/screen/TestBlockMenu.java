@@ -9,6 +9,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +18,7 @@ public class TestBlockMenu extends AbstractContainerMenu {
     public final TestBlockEntity blockEntity;
     private final Level level;
     private final ContainerData data;
+    private FluidStack fluidStack;
 
     public TestBlockMenu(int windowId, Inventory inv, FriendlyByteBuf buffer) {
         this(windowId, inv, inv.player.level.getBlockEntity(buffer.readBlockPos()), new SimpleContainerData(2));
@@ -28,6 +30,7 @@ public class TestBlockMenu extends AbstractContainerMenu {
         blockEntity = (TestBlockEntity) entity;
         level = inv.player.level;
         this.data = data;
+        fluidStack = blockEntity.getFluidStack();
 
         addInvSlots(inv);
         addHotbarSlots(inv);
@@ -107,5 +110,17 @@ public class TestBlockMenu extends AbstractContainerMenu {
     private void addHotbarSlots(Inventory inv) {
         for (int i = 0; i < 9; i++)
             addSlot(new Slot(inv, i, 8 + i * 18, 144));
+    }
+
+    public TestBlockEntity getBlockEntity() {
+        return blockEntity;
+    }
+
+    public void setFluid(FluidStack fluidStack) {
+        this.fluidStack = fluidStack;
+    }
+
+    public FluidStack getFluidStack() {
+        return fluidStack;
     }
 }

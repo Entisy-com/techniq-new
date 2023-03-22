@@ -4,6 +4,9 @@ import de.neariyeveryone.techniq.TechniqConstants;
 import de.neariyeveryone.techniq.block.Blocks;
 import de.neariyeveryone.techniq.block.TestBlock;
 import de.neariyeveryone.techniq.item.Items;
+import de.neariyeveryone.techniq.networking.Messages;
+import de.neariyeveryone.techniq.networking.packet.EnergySyncS2CPacket;
+import de.neariyeveryone.techniq.networking.packet.FluidSyncS2CPacket;
 import de.neariyeveryone.techniq.recipe.TestBlockRecipe;
 import de.neariyeveryone.techniq.screen.TestBlockMenu;
 import de.neariyeveryone.utilities.NAtomicInteger;
@@ -25,12 +28,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -56,7 +65,7 @@ public class TestBlockEntity extends BlockEntity implements MenuProvider {
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
             return switch (slot) {
-                case 0 -> stack.getItem() == net.minecraft.world.item.Items.WATER_BUCKET;
+                case 0 -> stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent();
                 case 1 -> stack.getItem() == Items.RAW_AMBER.get();
                 case 2 -> false;
                 default -> super.isItemValid(slot, stack);
@@ -68,9 +77,33 @@ public class TestBlockEntity extends BlockEntity implements MenuProvider {
         @Override
         public void onEnergyChange() {
             setChanged();
+            Messages.sendToClients(new EnergySyncS2CPacket(energy, getBlockPos()));
         }
     };
     private static final int REQUIRED_ENERGY = 32;
+
+    private final FluidTank FLUID_TANK = new FluidTank(64_000) {
+        @Override
+        public boolean isFluidValid(FluidStack stack) {
+            // recipes later
+            return stack.getFluid() == Fluids.WATER;
+        }
+
+        @Override
+        protected void onContentsChanged() {
+            setChanged();
+            if (level.isClientSide()) return;
+            Messages.sendToClients(new FluidSyncS2CPacket(fluid, worldPosition));
+        }
+    };
+
+    public void setFluid(FluidStack stack) {
+        FLUID_TANK.setFluid(stack);
+    }
+
+    public FluidStack getFluidStack() {
+        return FLUID_TANK.getFluid();
+    }
 
     private LazyOptional<ItemStackHandler> lazyItemHandler = LazyOptional.empty();
     private final Map<Direction, LazyOptional<WrappedHandler>> directionWrappedHandlerMap = Map.of(
@@ -85,6 +118,7 @@ public class TestBlockEntity extends BlockEntity implements MenuProvider {
     );
 
     private LazyOptional<IEnergyStorage> lazyEnergyHandler = LazyOptional.empty();
+    private LazyOptional<IFluidHandler> lazyFluidHandler = LazyOptional.empty();
 
     public TestBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntities.TEST_BLOCK_ENTITY.get(), pos, state);
@@ -147,6 +181,11 @@ public class TestBlockEntity extends BlockEntity implements MenuProvider {
                 };
             }
         }
+
+        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            return lazyFluidHandler.cast();
+        }
+
         return super.getCapability(cap, side);
     }
 
@@ -155,6 +194,7 @@ public class TestBlockEntity extends BlockEntity implements MenuProvider {
         super.onLoad();
         lazyItemHandler = LazyOptional.of(() -> itemHandler);
         lazyEnergyHandler = LazyOptional.of(() -> ENERGY_STORAGE);
+        lazyFluidHandler = LazyOptional.of(() -> FLUID_TANK);
     }
 
     @Override
@@ -162,6 +202,7 @@ public class TestBlockEntity extends BlockEntity implements MenuProvider {
         super.invalidateCaps();
         lazyItemHandler.invalidate();
         lazyEnergyHandler.invalidate();
+        lazyFluidHandler.invalidate();
     }
 
     @Override
@@ -169,6 +210,7 @@ public class TestBlockEntity extends BlockEntity implements MenuProvider {
         nbt.put("inventory", itemHandler.serializeNBT());
         nbt.putInt("test_block.progress", progress.get());
         nbt.putInt("test_block.energy", ENERGY_STORAGE.getEnergyStored());
+        nbt = FLUID_TANK.writeToNBT(nbt);
         super.saveAdditional(nbt);
     }
 
@@ -178,6 +220,7 @@ public class TestBlockEntity extends BlockEntity implements MenuProvider {
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
         progress.set(nbt.getInt("test_block.progress"));
         ENERGY_STORAGE.setEnergy(nbt.getInt("test_block.energy"));
+        FLUID_TANK.readFromNBT(nbt);
     }
 
     public void drops() {
@@ -187,10 +230,6 @@ public class TestBlockEntity extends BlockEntity implements MenuProvider {
         Containers.dropContents(Objects.requireNonNull(level), worldPosition, inv);
     }
 
-    private static boolean flag1(TestBlockEntity e) {
-        return e.itemHandler.getStackInSlot(0).getItem() == Blocks.AMBER_ORE.get().asItem();
-    }
-
     private static boolean hasEnoughEnergy(TestBlockEntity e) {
         return e.ENERGY_STORAGE.getEnergyStored() >= REQUIRED_ENERGY * e.maxProgress.get();
     }
@@ -198,14 +237,12 @@ public class TestBlockEntity extends BlockEntity implements MenuProvider {
     private static void extractEnergy(TestBlockEntity e) {
         e.ENERGY_STORAGE.extractEnergy(REQUIRED_ENERGY, false);
     }
+
     public static void tick(Level level, BlockPos pos, BlockState state, TestBlockEntity e) {
         if (level.isClientSide()) return;
+        setChanged(level, pos, state); // maybe remove later
 
-        if (flag1(e)) {
-            e.ENERGY_STORAGE.receiveEnergy(64, false);
-        }
-
-        if (hasRecipe(e) && hasEnoughEnergy(e)) {
+        if (hasRecipe(e) && hasEnoughEnergy(e) && hasEnoughFluid(e)) {
             e.progress.addAndGet(1);
             extractEnergy(e);
             setChanged(level, pos, state);
@@ -218,6 +255,35 @@ public class TestBlockEntity extends BlockEntity implements MenuProvider {
             e.progress.set(0);
             setChanged(level, pos, state);
         }
+
+        if (hasFluidItemInSourceSlot(e)) {
+            transferFluidToTank(e);
+        }
+    }
+
+    private static boolean hasEnoughFluid(TestBlockEntity e) {
+        return e.FLUID_TANK.getFluidAmount() >= 500; // 500 being the required amount
+    }
+
+    private static void transferFluidToTank(TestBlockEntity e) {
+        e.itemHandler.getStackInSlot(0).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(handler -> {
+            int drainAmount = Math.min(e.FLUID_TANK.getSpace(), 1000);
+            FluidStack stack = handler.drain(drainAmount, IFluidHandler.FluidAction.SIMULATE);
+            if (e.FLUID_TANK.isFluidValid(stack)) {
+                stack = handler.drain(drainAmount, IFluidHandler.FluidAction.EXECUTE);
+                fillTank(e, stack, handler.getContainer());
+            }
+        });
+    }
+
+    private static void fillTank(TestBlockEntity e, FluidStack stack, ItemStack container) {
+        e.FLUID_TANK.fill(stack, IFluidHandler.FluidAction.EXECUTE);
+        e.itemHandler.extractItem(0, 1, false);
+        e.itemHandler.insertItem(0, container, false);
+    }
+
+    private static boolean hasFluidItemInSourceSlot(TestBlockEntity e) {
+        return e.itemHandler.getStackInSlot(0).getCount() > 0;
     }
 
     private static void craft(TestBlockEntity e) {
@@ -231,6 +297,7 @@ public class TestBlockEntity extends BlockEntity implements MenuProvider {
         Optional<TestBlockRecipe> recipe = Objects.requireNonNull(level).getRecipeManager().getRecipeFor(TestBlockRecipe.Type.INSTANCE,
                 inv, level);
 
+        e.FLUID_TANK.drain(500, IFluidHandler.FluidAction.EXECUTE);
         e.itemHandler.extractItem(1, 1, false);
         e.itemHandler.setStackInSlot(2, new ItemStack(recipe.get().getResultItem().getItem(),
                 e.itemHandler.getStackInSlot(2).getCount() + 1));
@@ -251,5 +318,13 @@ public class TestBlockEntity extends BlockEntity implements MenuProvider {
     private static boolean canMoveItem(SimpleContainer inv, ItemStack item) {
         return inv.getItem(2).getMaxStackSize() > inv.getItem(2).getCount() && (
                 inv.getItem(2).getItem() == item.getItem() || inv.getItem(2).isEmpty());
+    }
+
+    public IEnergyStorage getStorage() {
+        return ENERGY_STORAGE;
+    }
+
+    public void setEnergyLevel(int energy) {
+        ENERGY_STORAGE.setEnergy(energy);
     }
 }

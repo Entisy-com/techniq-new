@@ -3,6 +3,7 @@ package de.neariyeveryone.techniq;
 import de.neariyeveryone.techniq.block.Blocks;
 import de.neariyeveryone.techniq.block.entity.BlockEntities;
 import de.neariyeveryone.techniq.item.Items;
+import de.neariyeveryone.techniq.networking.Messages;
 import de.neariyeveryone.techniq.recipe.Recipes;
 import de.neariyeveryone.techniq.screen.MenuTypes;
 import de.neariyeveryone.techniq.screen.TestBlockScreen;
@@ -28,15 +29,10 @@ public class Techniq {
         MenuTypes.MENU_TYPES.register(bus);
         Recipes.RECIPE_SERIALIZERS.register(bus);
 
+        Messages.register();
+
         MinecraftForge.EVENT_BUS.register(this);
-
-//        bus.addListener(this::addCreativeTab);
     }
-
-//    void addCreativeTab(CreativeModeTabEvent.BuildContents event) {
-//        if (event.getTab() == TechniqTab.TAB)
-//            Items.ITEMS.getEntries().forEach(event::accept);
-//    }
 
     public static final CreativeModeTab TAB= new CreativeModeTab("tab") {
 

@@ -13,6 +13,8 @@ public class LangFileGenerator extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
+        add(String.format("tooltip.%s.liquid.amount.with.capacity", TechniqConstants.MOD_ID), "%s/%smb");
+        add(String.format("tooltip.%s.liquid.amount", TechniqConstants.MOD_ID), "%smb");
         add(String.format("itemGroup.%s.tab", TechniqConstants.MOD_ID), capitalize(TechniqConstants.MOD_ID));
         Items.ITEMS.getEntries().forEach(item -> add(item.get(), getName(item.getId().getPath())));
     }
