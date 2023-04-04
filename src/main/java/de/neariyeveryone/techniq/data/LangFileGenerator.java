@@ -2,6 +2,7 @@ package de.neariyeveryone.techniq.data;
 
 import de.neariyeveryone.techniq.TechniqConstants;
 import de.neariyeveryone.techniq.item.Items;
+import de.neariyeveryone.techniq.screen.MenuTypes;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
 
@@ -23,7 +24,7 @@ public class LangFileGenerator extends LanguageProvider {
         var words = id.split("_");
         StringBuilder toReturn = new StringBuilder(capitalize(words[0]));
         if (words.length > 1)
-            for (int i = 1; i < words.length; i++)
+            for (var i = 1; i < words.length; i++)
                 toReturn.append(String.format(" %s", capitalize(words[i])));
         return toReturn.toString();
     }

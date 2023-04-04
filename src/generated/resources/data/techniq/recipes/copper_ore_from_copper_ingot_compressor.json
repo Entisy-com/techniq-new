@@ -1,0 +1,17 @@
+{
+  "type": "techniq:compressor_recipe",
+  "energy": 2000,
+  "ingredients": [
+    {
+      "count": 8,
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "minecraft:stone"
+    }
+  ],
+  "output": {
+    "item": "minecraft:copper_ore"
+  },
+  "processTime": 120
+}

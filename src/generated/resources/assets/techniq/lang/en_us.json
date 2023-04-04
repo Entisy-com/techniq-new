@@ -1,9 +1,17 @@
 {
-  "block.techniq.amber_block": "Amber Block",
-  "block.techniq.amber_ore": "Amber Ore",
-  "block.techniq.test_block": "Test Block",
-  "item.techniq.amber": "Amber",
-  "item.techniq.raw_amber": "Raw Amber",
-  "item.techniq.test_item": "Test Item",
-  "itemGroup.techniq.tab": "Techniq"
+  "block.techniq.advanced_furnace_generator": "Advanced Furnace Generator",
+  "block.techniq.basic_furnace_generator": "Basic Furnace Generator",
+  "block.techniq.compressor": "Compressor",
+  "block.techniq.metal_press": "Metal Press",
+  "item.techniq.diamond_plate": "Diamond Plate",
+  "item.techniq.diamond_rod": "Diamond Rod",
+  "item.techniq.gold_plate": "Gold Plate",
+  "item.techniq.gold_rod": "Gold Rod",
+  "item.techniq.iron_plate": "Iron Plate",
+  "item.techniq.iron_rod": "Iron Rod",
+  "item.techniq.plate_press": "Plate Press",
+  "item.techniq.rod_press": "Rod Press",
+  "itemGroup.techniq.tab": "Techniq",
+  "tooltip.techniq.liquid.amount": "%smb",
+  "tooltip.techniq.liquid.amount.with.capacity": "%s/%smb"
 }

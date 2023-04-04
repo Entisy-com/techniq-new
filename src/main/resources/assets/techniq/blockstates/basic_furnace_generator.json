@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "techniq:block/basic_furnace_generator",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "techniq:block/basic_furnace_generator"
+    },
+    "facing=south": {
+      "model": "techniq:block/basic_furnace_generator",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "techniq:block/basic_furnace_generator",
+      "y": 270
+    }
+  }
+}

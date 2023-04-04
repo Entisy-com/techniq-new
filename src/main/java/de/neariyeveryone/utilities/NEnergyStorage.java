@@ -22,7 +22,7 @@ public abstract class NEnergyStorage extends EnergyStorage {
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
-        int extractedEnergy = super.extractEnergy(maxExtract, simulate);
+        var extractedEnergy = super.extractEnergy(maxExtract, simulate);
         if (extractedEnergy != 0)
             onEnergyChange();
         return extractedEnergy;
@@ -30,15 +30,14 @@ public abstract class NEnergyStorage extends EnergyStorage {
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
-        int receivedEnergy = super.receiveEnergy(maxReceive, simulate);
+        var receivedEnergy = super.receiveEnergy(maxReceive, simulate);
         if (receivedEnergy != 0)
             onEnergyChange();
         return receivedEnergy;
     }
 
-    public int setEnergy(int energy) {
+    public void setEnergy(int energy) {
         this.energy = energy;
-        return energy;
     }
 
     public abstract void onEnergyChange();

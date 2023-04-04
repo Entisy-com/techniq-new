@@ -1,0 +1,17 @@
+{
+  "type": "techniq:compressor_recipe",
+  "energy": 2000,
+  "ingredients": [
+    {
+      "count": 8,
+      "item": "minecraft:gold_ingot"
+    },
+    {
+      "item": "minecraft:stone"
+    }
+  ],
+  "output": {
+    "item": "minecraft:gold_ore"
+  },
+  "processTime": 120
+}

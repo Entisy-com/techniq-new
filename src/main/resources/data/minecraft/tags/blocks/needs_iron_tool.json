@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "techniq:metal_press",
+    "techniq:compressor",
+    "techniq:basic_furnace_generator",
+    "techniq:advanced_furnace_generator"
+  ]
+}

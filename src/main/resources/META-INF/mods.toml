@@ -1,24 +1,12 @@
 modLoader="javafml"
-loaderVersion="[40,)"
-license="GPL4.0"
+loaderVersion="[43,)"
+license="GPL3.0"
 
 [[mods]]
 modId="techniq"
 version="${file.jarVersion}"
 displayName="Techniq"
 logoFile="logo.png"
-authors="neariyeveryone"
+authors="neariyeveryone, kimunachan"
 description='''
 '''
-[[dependencies.techniq]]
-    modId="forge"
-    mandatory=true
-    versionRange="[40,)"
-    ordering="NONE"
-    side="BOTH"
-[[dependencies.techniq]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[1.18.2,1.20)"
-    ordering="NONE"
-    side="BOTH"

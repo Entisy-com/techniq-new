@@ -1,0 +1,17 @@
+{
+  "type": "techniq:metal_press_recipe",
+  "energy": 2000,
+  "ingredients": [
+    {
+      "count": 2,
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "techniq:plate_press"
+    }
+  ],
+  "output": {
+    "item": "techniq:iron_plate"
+  },
+  "processTime": 80
+}

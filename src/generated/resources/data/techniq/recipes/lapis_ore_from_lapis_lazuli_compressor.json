@@ -1,0 +1,17 @@
+{
+  "type": "techniq:compressor_recipe",
+  "energy": 2000,
+  "ingredients": [
+    {
+      "count": 8,
+      "item": "minecraft:lapis_lazuli"
+    },
+    {
+      "item": "minecraft:stone"
+    }
+  ],
+  "output": {
+    "item": "minecraft:lapis_ore"
+  },
+  "processTime": 120
+}

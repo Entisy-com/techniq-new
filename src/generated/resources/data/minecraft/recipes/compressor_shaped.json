@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "item": "minecraft:iron_block"
+    },
+    "P": {
+      "item": "techniq:iron_plate"
+    },
+    "R": {
+      "item": "techniq:iron_rod"
+    }
+  },
+  "pattern": [
+    "RPR",
+    "PBP",
+    "RPR"
+  ],
+  "result": {
+    "item": "techniq:compressor"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "techniq:block/machines/basic_furnace_generator/bottom",
+    "front": "techniq:block/machines/basic_furnace_generator/front",
+    "side": "techniq:block/machines/basic_furnace_generator/side",
+    "top": "techniq:block/machines/basic_furnace_generator/top"
+  }
+}

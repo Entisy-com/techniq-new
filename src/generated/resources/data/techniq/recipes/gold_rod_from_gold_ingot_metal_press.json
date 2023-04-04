@@ -1,0 +1,17 @@
+{
+  "type": "techniq:metal_press_recipe",
+  "energy": 2000,
+  "ingredients": [
+    {
+      "item": "minecraft:gold_ingot"
+    },
+    {
+      "item": "techniq:rod_press"
+    }
+  ],
+  "output": {
+    "count": 2,
+    "item": "techniq:gold_rod"
+  },
+  "processTime": 80
+}

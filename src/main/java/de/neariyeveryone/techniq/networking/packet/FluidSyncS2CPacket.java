@@ -1,7 +1,6 @@
 package de.neariyeveryone.techniq.networking.packet;
 
-import de.neariyeveryone.techniq.block.entity.TestBlockEntity;
-import de.neariyeveryone.techniq.screen.TestBlockMenu;
+import de.neariyeveryone.utilities.NBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -10,7 +9,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class FluidSyncS2CPacket {
+public class FluidSyncS2CPacket extends LoginPacket {
     private final FluidStack fluidStack;
     private final BlockPos pos;
 
@@ -30,14 +29,12 @@ public class FluidSyncS2CPacket {
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
-        NetworkEvent.Context context = supplier.get();
+        var context = supplier.get();
         context.enqueueWork(() -> {
             var mc = Minecraft.getInstance();
-            if (mc.level.getBlockEntity(pos) instanceof TestBlockEntity e) {
+            assert mc.level != null;
+            if (mc.level.getBlockEntity(pos) instanceof NBlockEntity e) {
                 e.setFluid(fluidStack);
-                if (mc.player.containerMenu instanceof TestBlockMenu menu && menu.getBlockEntity().getBlockPos().equals(pos)) {
-                    menu.setFluid(fluidStack);
-                }
             }
         });
         return true;
